@@ -1,4 +1,3 @@
-#include <iostream>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -6,14 +5,15 @@
 #include <netdb.h>
 #include <time.h>
 #include <string.h>
+#include <stdio.h>
+#include <stdint.h>
 
-using namespace std;
 
 void timeProtocolUDPClient(const char address[]);
 
 int main(int argc, const char * argv[]){
     if(argc != 2){
-        cout << "Improper amount of arguments" << endl;
+        printf("Improper amount of arguments \n");
         return 1;
     }
     timeProtocolUDPClient(argv[1]);
@@ -23,8 +23,8 @@ int main(int argc, const char * argv[]){
 void timeProtocolUDPClient(const char address[]){
     //Initial variable definitions
 
-    //UDP uses port 123
-    int port = 123;
+    //UDP uses port 37
+    int port = 37;
     int maxLength = 1024;
 
     //Buffer for outgoing and incoming messages
@@ -33,13 +33,11 @@ void timeProtocolUDPClient(const char address[]){
 
     //From netdb.h, just sets up the protocol, in this case udp
     struct protoent * proto;
-
     //From netinet/in.h, used for socket setup
     struct sockaddr_in server_addr;
 
     //Socket and time limit variables, timeLimit used similar to a time_t
     int sock;
-    long timeLimit;
 
     //From netdb, set the protocol and the socket, PF_INET is protocol family, SOCK_DGRAM is socket datagram, p_proto is the protocol number
     proto = getprotobyname("udp");
@@ -70,15 +68,18 @@ void timeProtocolUDPClient(const char address[]){
     i = recvfrom(sock, buffer, 48, 0, &socketAddr,&socketAddr_l);
 
     //Get the transmit time
-    timeLimit = ntohl((time_t)buffer[4]);
-
-    //Subtract 2208988900 (unsigned) for formatting purposes
-    timeLimit-= 2208988800U;
+    //time_t timeLimit = ntohl(buffer[0]);
+    time_t timeLimit = buffer[0];
     
     //Output the time in a readable format
-    cout << "NTP time is " << ctime(&timeLimit) << endl;
+    printf("Raw time recieved: %ld \n", timeLimit);
+    printf("NTP time is ");
+    printf("%s", ctime(&timeLimit));
+    printf("\n");
 
     //Output the difference between the system time
     i = time(0);
-    cout << "System time is " << (i - timeLimit) << " seconds off" << endl;
+    printf("System time is ");
+    printf("%ld", (i - timeLimit));
+    printf(" seconds off\n");
 }
