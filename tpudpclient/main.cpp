@@ -23,8 +23,8 @@ int main(int argc, const char * argv[]){
 void timeProtocolUDPClient(const char address[]){
     //Initial variable definitions
 
-    //UDP uses port 123
-    int port = 123;
+    //UDP uses port 37
+    int port = 37;
     int maxLength = 1024;
 
     //Buffer for outgoing and incoming messages
@@ -73,7 +73,7 @@ void timeProtocolUDPClient(const char address[]){
     timeLimit = ntohl((time_t)buffer[4]);
 
     //Subtract 2208988900 (unsigned) for formatting purposes
-    timeLimit-= 2208988800U;
+    timeLimit -= 2208988800U;
     
     //Output the time in a readable format
     cout << "NTP time is " << ctime(&timeLimit) << endl;
