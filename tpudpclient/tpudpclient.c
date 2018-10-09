@@ -6,6 +6,7 @@
 #include <time.h>
 #include <string.h>
 #include <stdio.h>
+#include <stdint.h>
 
 
 void timeProtocolUDPClient(const char address[]);
@@ -37,7 +38,6 @@ void timeProtocolUDPClient(const char address[]){
 
     //Socket and time limit variables, timeLimit used similar to a time_t
     int sock;
-    long timeLimit;
 
     //From netdb, set the protocol and the socket, PF_INET is protocol family, SOCK_DGRAM is socket datagram, p_proto is the protocol number
     proto = getprotobyname("udp");
@@ -68,9 +68,11 @@ void timeProtocolUDPClient(const char address[]){
     i = recvfrom(sock, buffer, 48, 0, &socketAddr,&socketAddr_l);
 
     //Get the transmit time
-    timeLimit = ntohl((time_t)buffer[0]);
+    //time_t timeLimit = ntohl(buffer[0]);
+    time_t timeLimit = buffer[0];
     
     //Output the time in a readable format
+    printf("Raw time recieved: %ld \n", timeLimit);
     printf("NTP time is ");
     printf("%s", ctime(&timeLimit));
     printf("\n");
