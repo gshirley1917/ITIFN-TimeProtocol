@@ -1,13 +1,8 @@
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
 #include <arpa/inet.h>
 #include <netdb.h>
 #include <time.h>
 #include <string.h>
 #include <stdio.h>
-#include <stdint.h>
-
 
 void timeProtocolUDPClient(const char address[]);
 
@@ -73,6 +68,10 @@ void timeProtocolUDPClient(const char address[]){
     
     //Output the time in a readable format
     printf("Raw time recieved: %ld \n", timeLimit);
+
+    //Change time as indicated by RFC
+    timeLimit -= 2208988800;
+    
     printf("NTP time is ");
     printf("%s", ctime(&timeLimit));
     printf("\n");

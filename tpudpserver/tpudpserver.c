@@ -1,14 +1,9 @@
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
 #include <arpa/inet.h>
 #include <netdb.h>
 #include <time.h>
-#include <string.h>
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
-#include <stdint.h>
 
 void timeProtocolUDPServer();
 void error(const char * msg);
@@ -70,8 +65,11 @@ void timeProtocolUDPServer(){
     //Get the current time and send it through the socket
     //Time stored as an unsigned 32 bit integer
     uint32_t currentTime = time(NULL);
+
+    //Change time to format specified by RFC
+    currentTime += 2208988800;
     if(sendto(sockForward, (char *) &currentTime, (int)sizeof(currentTime), 0, (struct sockaddr *) &clientAddr, clientLength) == (int)sizeof(currentTime)){
-        printf("Time sent: %d\n", currentTime);
+        printf("Time sent: %u\n", currentTime);
     }
 
     //Close the socket
